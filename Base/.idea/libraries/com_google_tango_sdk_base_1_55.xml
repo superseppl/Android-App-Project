@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="com.google.tango:sdk-base-1.55">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/sdk-base-1.55.aar/3d8346d2659a9a49978d4fbbe9985519/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/sdk-base-1.55.aar/3d8346d2659a9a49978d4fbbe9985519/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
