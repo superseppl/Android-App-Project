@@ -34,6 +34,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.display.DisplayManager;
 import android.opengl.GLSurfaceView;
@@ -98,8 +99,10 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent intent = getIntent();
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_ar);
         mSurfaceView = (SurfaceView) findViewById(R.id.surfaceview);
         mSurfaceView.setOnTouchListener(this);
         mRenderer = new AugmentedRealityRenderer(this);
