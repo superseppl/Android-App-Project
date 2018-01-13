@@ -20,7 +20,7 @@
     android:versionName="0" >
 
     <uses-sdk
-        android:minSdkVersion="19"
+        android:minSdkVersion="21"
         android:targetSdkVersion="23" />
 
     <uses-permission android:name="android.permission.CAMERA" />
@@ -28,8 +28,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@android:style/Theme.Material" >
         <uses-library
             android:name="com.projecttango.libtango_device2"
             android:required="true" />
@@ -41,6 +40,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".AugmentedRealityActivity"
             android:parentActivityName=".MainActivity">
         </activity>
