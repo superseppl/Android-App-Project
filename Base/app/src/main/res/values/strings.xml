@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
    Copyright 2016 Google Inc.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,4 +21,5 @@
     <string name="exception_tango_invalid">"Tango invalid exception! Try again!"</string>
     <string name="exception_out_of_date">"Tango service outdated!"</string>
     <string name="permission_camera">"Camera permission needed!"</string>
+    <string name="title_activity_setting">Setting</string>
 </resources>

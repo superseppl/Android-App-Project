@@ -28,4 +28,9 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(this, AugmentedRealityActivity.class);
         startActivity(intent);
     }
+
+    public void sendSettings(View view) {
+        Intent intent = new Intent(this, Setting.class);
+        startActivity(intent);
+    }
 }
