@@ -40,5 +40,6 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/start"
         android:layout_centerHorizontal="true"
+        android:onClick="sendSpotify"
         android:text="Spotify" />
 </RelativeLayout>

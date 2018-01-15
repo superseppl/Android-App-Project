@@ -46,10 +46,18 @@
         </activity>
         <activity
             android:name=".AugmentedRealityActivity"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".Setting"
             android:label="@string/title_activity_setting"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.projecttango.examples.java.augmentedreality.MainActivity" />
+        </activity>
+        <activity
+            android:name=".Spotify"
+            android:label="@string/title_activity_spotify"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
