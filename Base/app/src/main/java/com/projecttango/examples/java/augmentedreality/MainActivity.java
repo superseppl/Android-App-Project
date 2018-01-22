@@ -21,7 +21,6 @@ public class MainActivity extends Activity {
         // status bar is hidden, so hide that too if necessary.
         ActionBar actionBar = getActionBar();
         actionBar.hide();
-        //saklaösd
     }
 
     public void sendStart(View view) {
