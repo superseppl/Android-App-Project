@@ -17,13 +17,13 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         // Hide the status bar.
-        View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
+        //View decorView = getWindow().getDecorView();
+        //int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        //decorView.setSystemUiVisibility(uiOptions);
         // Remember that you should never show the action bar if the
         // status bar is hidden, so hide that too if necessary.
-        ActionBar actionBar = getActionBar();
-        actionBar.hide();
+        //ActionBar actionBar = getActionBar();
+        //actionBar.hide();
     }
 
     @Override
@@ -31,9 +31,6 @@ public class MainActivity extends Activity {
         super.onResume();
 
         sphereSize = getIntent().getIntExtra("size", 1);
-
-        Toast.makeText(MainActivity.this,"seek bar progress:"+ sphereSize,
-                Toast.LENGTH_SHORT).show();
     }
 
     public void sendStart(View view) {

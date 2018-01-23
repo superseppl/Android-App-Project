@@ -10,19 +10,17 @@ import android.widget.Toast;
 public class Setting extends Activity {
 
     private SeekBar seekBar = null;
-    int sphereSize = 1;
+    int sphereSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setDisplayHomeAsUpEnabled(false);
 
         sphereSize = getIntent().getIntExtra("size", 1);
         seekBar = (SeekBar) findViewById(R.id.seekBar2);
-
-        Toast.makeText(Setting.this, "seek bar progress:" + sphereSize,
-                Toast.LENGTH_SHORT).show();
+        seekBar.setProgress(sphereSize);
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
@@ -35,10 +33,8 @@ public class Setting extends Activity {
             }
 
             public void onStopTrackingTouch(SeekBar seekBar) {
-                Toast.makeText(Setting.this, "seek bar progress:" + sphereSize,
+                Toast.makeText(Setting.this, "Size of Sphere is" + sphereSize,
                         Toast.LENGTH_SHORT).show();
-
-                //
             }
         });
     }
@@ -49,8 +45,12 @@ public class Setting extends Activity {
         startActivity(sendSizeToMain);
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent sendSizeToMain = new Intent(Setting.this , MainActivity.class);
+        sendSizeToMain.putExtra("size", sphereSize);
+        startActivity(sendSizeToMain);
 
-
-
-
+        super.onBackPressed();
+    }
 }
