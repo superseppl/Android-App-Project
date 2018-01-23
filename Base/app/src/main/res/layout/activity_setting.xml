@@ -5,6 +5,16 @@
     android:layout_height="match_parent"
     tools:context="com.projecttango.examples.java.augmentedreality.Setting">
 
+    <Button
+        android:id="@+id/si"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="100dp"
+        android:text="Apply"
+        android:onClick="sendSettingsToMain"/>
+
     <TextView
         android:id="@+id/size"
         android:layout_width="wrap_content"
@@ -13,7 +23,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="25dp"
         android:layout_marginTop="23dp"
-        android:text="Size" />
+        android:text="Size"
+        android:textSize="24sp" />
 
     <SeekBar
         android:id="@+id/seekBar2"
@@ -30,5 +41,7 @@
         android:layout_alignStart="@+id/seekBar2"
         android:layout_below="@+id/seekBar2"
         android:layout_marginTop="23dp"
-        android:text="Color" />
+        android:text="Color"
+        android:textSize="24sp" />
+
 </RelativeLayout>

@@ -5,8 +5,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
+
+    Integer sphereSize = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,18 +26,29 @@ public class MainActivity extends Activity {
         actionBar.hide();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        sphereSize = getIntent().getIntExtra("size", 1);
+
+        Toast.makeText(MainActivity.this,"seek bar progress:"+ sphereSize,
+                Toast.LENGTH_SHORT).show();
+    }
+
     public void sendStart(View view) {
-        Intent intent = new Intent(this, AugmentedRealityActivity.class);
+        Intent intent = new Intent(MainActivity.this, AugmentedRealityActivity.class);
         startActivity(intent);
     }
 
     public void sendSettings(View view) {
-        Intent intent = new Intent(this, Setting.class);
-        startActivity(intent);
+        Intent sendSizetoSetting = new Intent(MainActivity.this, Setting.class);
+        sendSizetoSetting.putExtra("size", sphereSize);
+        startActivity(sendSizetoSetting);
     }
 
     public void sendSpotify(View view) {
-        Intent intent = new Intent(this, Spotify.class);
+        Intent intent = new Intent(MainActivity.this, Spotify.class);
         startActivity(intent);
     }
 }
