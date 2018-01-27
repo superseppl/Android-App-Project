@@ -41,9 +41,9 @@
             android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".AugmentedRealityActivity"
@@ -58,11 +58,17 @@
         </activity>
         <activity
             android:name=".Spotify"
-            android:label="@string/title_activity_spotify"
+            android:label="Dope Music Playing Sphere"
             android:parentActivityName=".MainActivity">
+            <intent-filter>
+                <action android:name="android.media.action.MEDIA_PLAY_FROM_SEARCH" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.projecttango.examples.java.augmentedreality.MainActivity" />
+
         </activity>
     </application>
 
