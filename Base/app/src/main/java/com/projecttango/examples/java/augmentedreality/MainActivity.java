@@ -10,6 +10,7 @@ import android.widget.Toast;
 public class MainActivity extends Activity {
 
     Integer sphereSize = 1;
+    Integer sphereMap = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,8 @@ public class MainActivity extends Activity {
         super.onResume();
 
         sphereSize = getIntent().getIntExtra("size", 1);
+        sphereMap = getIntent().getIntExtra("map", 1);
+
     }
 
     public void sendStart(View view) {
@@ -39,9 +42,10 @@ public class MainActivity extends Activity {
     }
 
     public void sendSettings(View view) {
-        Intent sendSizetoSetting = new Intent(MainActivity.this, Setting.class);
-        sendSizetoSetting.putExtra("size", sphereSize);
-        startActivity(sendSizetoSetting);
+        Intent sendSettingsToSetting = new Intent(MainActivity.this, Setting.class);
+        sendSettingsToSetting.putExtra("size", sphereSize);
+        sendSettingsToSetting.putExtra("map", sphereMap);
+        startActivity(sendSettingsToSetting);
     }
 
     public void sendSpotify(View view) {
