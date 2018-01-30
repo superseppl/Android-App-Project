@@ -9,8 +9,8 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-    Integer sphereSize = 1;
-    Integer sphereMap = 1;
+    static Integer sphereSize = 45;
+    static Integer sphereMap = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,7 @@ public class MainActivity extends Activity {
     public void onResume() {
         super.onResume();
 
-        sphereSize = getIntent().getIntExtra("size", 1);
+        sphereSize = getIntent().getIntExtra("size", 45);
         sphereMap = getIntent().getIntExtra("map", 1);
 
     }
