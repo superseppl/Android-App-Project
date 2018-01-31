@@ -29,7 +29,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/logo"
+        android:icon="@drawable/ic_launcher"
         android:theme="@android:style/Theme.Material"
         android:label="Planet of Music">
         <uses-library
