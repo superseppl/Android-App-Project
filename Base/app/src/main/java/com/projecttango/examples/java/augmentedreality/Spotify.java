@@ -10,6 +10,7 @@ public class Spotify extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_spotify);
         getActionBar().setDisplayHomeAsUpEnabled(true);
+        // COMMENT
     }
 
 }
