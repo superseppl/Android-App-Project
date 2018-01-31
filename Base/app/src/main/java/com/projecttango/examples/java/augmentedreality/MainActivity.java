@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
     }
 
     public void sendSpotify(View view) {
-        Intent intent = new Intent(MainActivity.this, Spotify.class);
+        Intent intent = new Intent(MainActivity.this, MySpotify.class);
         startActivity(intent);
     }
 }

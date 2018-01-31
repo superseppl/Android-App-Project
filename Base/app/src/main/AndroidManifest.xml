@@ -26,6 +26,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -57,12 +59,28 @@
                 android:value="com.projecttango.examples.java.augmentedreality.MainActivity" />
         </activity>
         <activity
-            android:name=".Spotify"
-            android:label="@string/title_activity_spotify"
+            android:screenOrientation="portrait"
+            android:name=".MySpotify"
+            android:label="MySpotify"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.projecttango.examples.java.augmentedreality.MainActivity" />
+        </activity>
+
+        <activity
+            android:name="com.spotify.sdk.android.authentication.WebAuthResultActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:host="callback"
+                    android:scheme="my-spotify-app-login"/>
+            </intent-filter>
         </activity>
     </application>
 
