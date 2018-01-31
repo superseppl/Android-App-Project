@@ -31,9 +31,11 @@ import com.google.atap.tangoservice.TangoXyzIjData;
 import com.google.tango.support.TangoSupport;
 
 import android.Manifest;
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.display.DisplayManager;
 import android.opengl.GLSurfaceView;
@@ -98,8 +100,19 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent intent = getIntent();
+
+        // Hide the status bar.
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+        // Remember that you should never show the action bar if the
+        // status bar is hidden, so hide that too if necessary.
+        ActionBar actionBar = getActionBar();
+        actionBar.hide();
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_ar);
         mSurfaceView = (SurfaceView) findViewById(R.id.surfaceview);
         mSurfaceView.setOnTouchListener(this);
         mRenderer = new AugmentedRealityRenderer(this);
@@ -522,4 +535,26 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
         mRenderer.onTouchEvent(motionEvent);
         return true;
     }
+
+    /*
+    @Override
+    public boolean onTouchEvent(MotionEvent e) {
+        // MotionEvent reports input details from the touch screen
+        // and other input controls. In this case, you are only
+        // interested in events where the touch position changed.
+
+        float x = e.getX();
+        float y = e.getY();
+
+        switch (e.getAction()) {
+            case MotionEvent.ACTION_MOVE:
+
+                float dx = x - mPreviousX;
+                float dy = y - mPreviousY;
+
+        }
+
+        return true;
+    }
+    */
 }

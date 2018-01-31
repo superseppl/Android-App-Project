@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
    Copyright 2016 Google Inc.
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,30 +16,53 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.projecttango.examples.java.augmentedreality"
     android:versionCode="0"
-    android:versionName="0" >
+    android:versionName="0">
 
     <uses-sdk
-        android:minSdkVersion="19"
+        android:minSdkVersion="21"
         android:targetSdkVersion="23" />
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@android:style/Theme.Material"
+        android:label="Planet of Music">
         <uses-library
             android:name="com.projecttango.libtango_device2"
             android:required="true" />
+
         <activity
-            android:name=".AugmentedRealityActivity"
-            android:label="@string/app_name_long"
+            android:name=".MainActivity"
             android:configChanges="orientation|screenSize">
-            <intent-filter android:label="@string/app_name">
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".AugmentedRealityActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".Setting"
+            android:label="@string/title_activity_setting"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.projecttango.examples.java.augmentedreality.MainActivity" />
+        </activity>
+        <activity
+            android:name=".Spotify"
+            android:label="@string/title_activity_spotify"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.projecttango.examples.java.augmentedreality.MainActivity" />
         </activity>
     </application>
 
