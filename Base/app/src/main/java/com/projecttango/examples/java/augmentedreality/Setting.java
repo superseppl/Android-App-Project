@@ -22,7 +22,7 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
         setContentView(R.layout.activity_setting);
         getActionBar().setDisplayHomeAsUpEnabled(false);
 
-        sphereSize = getIntent().getIntExtra("size", 1);
+        sphereSize = getIntent().getIntExtra("size", 45);
         sphereMap = getIntent().getIntExtra("map", 1);
 
         //Set the Spinner with Layout, ArrayAdapter, Value
