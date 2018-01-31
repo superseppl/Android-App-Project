@@ -3,9 +3,14 @@ package com.projecttango.examples.java.augmentedreality;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 public class MainActivity extends Activity {
 
@@ -16,6 +21,8 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        playBack();
 
         // Hide the status bar.
         //View decorView = getWindow().getDecorView();
@@ -34,6 +41,7 @@ public class MainActivity extends Activity {
         sphereSize = getIntent().getIntExtra("size", 45);
         sphereMap = getIntent().getIntExtra("map", 1);
 
+        playBack();
     }
 
     public void sendStart(View view) {
@@ -51,5 +59,12 @@ public class MainActivity extends Activity {
     public void sendSpotify(View view) {
         Intent intent = new Intent(MainActivity.this, MySpotify.class);
         startActivity(intent);
+    }
+
+    public void playBack (){
+        VideoView videoview = (VideoView) findViewById(R.id.videoView);
+        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.solarsystem);
+        videoview.setVideoURI(uri);
+        videoview.start();
     }
 }
