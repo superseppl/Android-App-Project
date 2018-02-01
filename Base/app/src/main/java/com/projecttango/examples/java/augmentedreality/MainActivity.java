@@ -20,6 +20,7 @@ public class MainActivity extends Activity {
 
     static Integer sphereSize = 45;
     static Integer sphereMap = 1;
+
     static final int SPEECH_REQUEST_CODE = 0;
 
     @Override
