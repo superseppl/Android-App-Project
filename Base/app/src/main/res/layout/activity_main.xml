@@ -42,4 +42,13 @@
         android:layout_centerHorizontal="true"
         android:onClick="sendSpotify"
         android:text="Spotify" />
+
+    <Button
+        android:id="@+id/speech"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/settings"
+        android:layout_centerHorizontal="true"
+        android:onClick="sendSpeech"
+        android:text="SPEAK, HUMAN " />
 </RelativeLayout>
