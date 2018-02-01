@@ -23,4 +23,14 @@
     <string name="permission_camera">"Camera permission needed!"</string>
     <string name="title_activity_setting">Setting</string>
     <string name="title_activity_spotify">Spotify</string>
+    <string-array name="planetsArray">
+        <item>Mercury</item>
+        <item>Venus</item>
+        <item>Earth</item>
+        <item>Mars</item>
+        <item>Jupiter</item>
+        <item>Saturn</item>
+        <item>Uranus</item>
+        <item>Neptune</item>
+    </string-array>
 </resources>

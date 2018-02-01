@@ -18,8 +18,11 @@ package com.projecttango.examples.java.augmentedreality;
 import com.google.atap.tangoservice.TangoPoseData;
 import com.google.tango.support.TangoSupport;
 
+import android.app.Activity;
 import android.content.Context;
 
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -44,6 +47,9 @@ import org.rajawali3d.primitives.Sphere;
 import org.rajawali3d.renderer.Renderer;
 import org.rajawali3d.util.ObjectColorPicker;
 import org.rajawali3d.util.OnObjectPickedListener;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
 
@@ -105,10 +111,20 @@ public class AugmentedRealityRenderer extends Renderer implements OnObjectPicked
         light.setPosition(3, 2, 4);
         getCurrentScene().addLight(light);
 
-        // Create sphere with earth texture and place it in space 3m forward from the origin.
+        // Create sphere with earth (or another planet) texture and place it in space 3m forward from the origin.
         Material earthMaterial = new Material();
+        Integer sphereMap = MainActivity.sphereMap;
+        Map<Integer, Integer> map = new HashMap<>();
+        map.put(0,R.drawable.mercury);
+        map.put(1,R.drawable.venus);
+        map.put(2,R.drawable.earth);
+        map.put(3,R.drawable.mars);
+        map.put(4,R.drawable.jupiter);
+        map.put(5,R.drawable.saturn);
+        map.put(6,R.drawable.uranus);
+        map.put(7,R.drawable.neptune);
         try {
-            Texture t = new Texture("earth", R.drawable.earth);
+            Texture t = new Texture("earth", map.get(sphereMap));
             earthMaterial.addTexture(t);
         } catch (ATexture.TextureException e) {
             Log.e(TAG, "Exception generating earth texture", e);
@@ -116,7 +132,9 @@ public class AugmentedRealityRenderer extends Renderer implements OnObjectPicked
         earthMaterial.setColorInfluence(0);
         earthMaterial.enableLighting(true);
         earthMaterial.setDiffuseMethod(new DiffuseMethod.Lambert());
-        Object3D earth = new Sphere(0.4f, 20, 20);
+        // Change the size of the planet
+        Integer sphereSize = MainActivity.sphereSize;
+        Object3D earth = new Sphere(sphereSize*0.008f, 20, 20);
         earth.setMaterial(earthMaterial);
         earth.setPosition(0, 0, -3);
         getCurrentScene().addChild(earth);
@@ -130,44 +148,7 @@ public class AugmentedRealityRenderer extends Renderer implements OnObjectPicked
         getCurrentScene().registerAnimation(animEarth);
         animEarth.play();
 
-        // Create sphere with moon texture.
-        Material moonMaterial = new Material();
-        try {
-            Texture t = new Texture("moon", R.drawable.moon);
-            moonMaterial.addTexture(t);
-        } catch (ATexture.TextureException e) {
-            Log.e(TAG, "Exception generating moon texture", e);
-        }
-        moonMaterial.setColorInfluence(0);
-        moonMaterial.enableLighting(true);
-        moonMaterial.setDiffuseMethod(new DiffuseMethod.Lambert());
-        Object3D moon = new Sphere(0.1f, 20, 20);
-        moon.setMaterial(moonMaterial);
-        moon.setPosition(0, 0, -1);
-        getCurrentScene().addChild(moon);
-
-        // Rotate the moon around its Y axis.
-        Animation3D animMoon = new RotateOnAxisAnimation(Vector3.Axis.Y, 0, -360);
-        animMoon.setInterpolator(new LinearInterpolator());
-        animMoon.setDurationMilliseconds(60000);
-        animMoon.setRepeatMode(Animation.RepeatMode.INFINITE);
-        animMoon.setTransformable3D(moon);
-        getCurrentScene().registerAnimation(animMoon);
-        animMoon.play();
-
-        // Make the moon orbit around the earth. The first two parameters are the focal point and
-        // periapsis of the orbit.
-        Animation3D translationMoon = new EllipticalOrbitAnimation3D(new Vector3(0, 0, -5),
-                new Vector3(0, 0, -1), Vector3.getAxisVector(Vector3.Axis.Y), 0,
-                360, EllipticalOrbitAnimation3D.OrbitDirection.COUNTERCLOCKWISE);
-        translationMoon.setDurationMilliseconds(60000);
-        translationMoon.setRepeatMode(Animation.RepeatMode.INFINITE);
-        translationMoon.setTransformable3D(moon);
-        getCurrentScene().registerAnimation(translationMoon);
-        translationMoon.play();
-
         mOnePicker.registerObject(earth);
-        mOnePicker.registerObject(moon);
         mOnePicker.registerObject(mBackgroundQuad);
     }
 
