@@ -128,6 +128,7 @@ public class MySpotify extends Activity implements
 
     private void openLoginWindow() {
         final AuthenticationRequest request = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
+                .setShowDialog(true)
                 .setScopes(new String[]{"user-read-private", "playlist-read", "playlist-read-private", "streaming"})
                 .build();
 
@@ -204,7 +205,6 @@ public class MySpotify extends Activity implements
         if (mMetadata != null) {
             findViewById(R.id.next_button).setEnabled(mMetadata.nextTrack != null);
             findViewById(R.id.prev_button).setEnabled(mMetadata.prevTrack != null);
-            //findViewById(R.id.pause_button).setEnabled(mMetadata.currentTrack != null);
         }
 
         final ImageView coverArtView = (ImageView) findViewById(R.id.cover_art);
@@ -232,7 +232,9 @@ public class MySpotify extends Activity implements
             Log.d("msg", "Logging in");
             openLoginWindow();
         } else {
+            Log.d("msg", "Logging out");
             mPlayer.logout();
+            FirstTimeClicked = true;
         }
     }
 
@@ -303,6 +305,7 @@ public class MySpotify extends Activity implements
             mPlayer.removeConnectionStateCallback(MySpotify.this);
         }
     }
+
 
     @Override
     protected void onDestroy() {
