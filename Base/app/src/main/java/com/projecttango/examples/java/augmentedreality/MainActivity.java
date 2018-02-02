@@ -4,11 +4,19 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+
 import android.speech.RecognizerIntent;
 import android.util.Log;
+
+import android.util.TypedValue;
+import android.view.MotionEvent;
+
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -28,6 +36,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        playBack();
+
         // Hide the status bar.
         //View decorView = getWindow().getDecorView();
         //int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -45,6 +55,7 @@ public class MainActivity extends Activity {
         sphereSize = getIntent().getIntExtra("size", 45);
         sphereMap = getIntent().getIntExtra("map", 1);
 
+        playBack();
     }
 
     public void sendStart(View view) {
@@ -60,7 +71,7 @@ public class MainActivity extends Activity {
     }
 
     public void sendSpotify(View view) {
-        Intent intent = new Intent(MainActivity.this, Spotify.class);
+        Intent intent = new Intent(MainActivity.this, MySpotify.class);
         startActivity(intent);
     }
 
@@ -83,8 +94,16 @@ public class MainActivity extends Activity {
                     EXTRA_RESULTS);
             String spokenText = results.get(0);
             // Do something with spokenText
-            Log.i("On activity result", "Spoken text: "+ spokenText);
+            Log.i("On activity result", "Spoken text: " + spokenText);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void playBack (){
+        VideoView videoview = (VideoView) findViewById(R.id.videoView);
+        Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.solarsystem);
+        videoview.setVideoURI(uri);
+        videoview.start();
+
     }
 }
