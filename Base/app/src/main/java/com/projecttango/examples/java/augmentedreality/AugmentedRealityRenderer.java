@@ -69,6 +69,7 @@ public class AugmentedRealityRenderer extends Renderer implements OnObjectPicked
 
     // Keeps track of whether the scene camera has been configured.
     private boolean mSceneCameraConfigured;
+    public boolean isPicked;
 
     private ScreenQuad mBackgroundQuad;
 
@@ -224,19 +225,33 @@ public class AugmentedRealityRenderer extends Renderer implements OnObjectPicked
 
     @Override
     public void onTouchEvent(MotionEvent event) {
+
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             Log.d(TAG, "Pick object attempt");
             mOnePicker.getObjectAt(event.getX(), event.getY());
+        }
+
+        if(event.getAction() == MotionEvent.ACTION_MOVE && isPicked){
+            Log.d("msg","Should work");
         }
     }
 
     @Override
     public void onObjectPicked(@NonNull Object3D object) {
-        Log.d(TAG, "Picked object: " + object);
+        Log.d(TAG, "Picked object: " + object.toString());
+        if(object.toString().toLowerCase().contains("sphere")){
+            isPicked = true;
+            Log.d(TAG, "Here should Spotifiy play Music");
+            //TODO: Integrate Spotify and make a simultan update for onTouchEvent
+        } else {
+            isPicked = false;
+        }
+
     }
 
     @Override
     public void onNoObjectPicked() {
         Log.d(TAG, "Picked no object");
+        isPicked = false;
     }
 }
