@@ -95,6 +95,8 @@ public class MainActivity extends Activity {
             String spokenText = results.get(0);
             // Do something with spokenText
             Log.i("On activity result", "Spoken text: " + spokenText);
+            Voice _voice = new Voice(spokenText);
+            _voice.parseSpotify();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

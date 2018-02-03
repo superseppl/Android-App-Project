@@ -54,5 +54,13 @@
         android:layout_marginBottom="80dp"
         android:onClick="sendSettings"
         android:text="Settings" />
+    <Button
+        android:id="@+id/voice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/start"
+        android:layout_centerHorizontal="true"
+        android:onClick="sendSpeech"
+        android:text="Speak, Human" />
 
 </RelativeLayout>
