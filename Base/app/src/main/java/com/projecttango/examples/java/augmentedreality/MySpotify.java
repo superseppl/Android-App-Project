@@ -217,7 +217,7 @@ public class MySpotify extends Activity implements
                     .load(mMetadata.currentTrack.albumCoverWebUrl)
                     .into(coverArtView);
         } else {
-            mMetadataText.setText("nothing is playing");
+            mMetadataText.setText("Please log in as a Premium User");
             coverArtView.setBackground(null);
         }
 
