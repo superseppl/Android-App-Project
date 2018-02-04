@@ -21,9 +21,11 @@ import com.google.tango.support.TangoSupport;
 import android.app.Activity;
 import android.content.Context;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.os.Handler;
+import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -51,9 +53,12 @@ import org.rajawali3d.util.ObjectColorPicker;
 import org.rajawali3d.util.OnObjectPickedListener;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
+
+import static android.speech.RecognizerIntent.EXTRA_RESULTS;
 
 /**
  * Renderer that implements a basic augmented reality scene using Rajawali.
@@ -77,8 +82,11 @@ public class AugmentedRealityRenderer extends Renderer implements OnObjectPicked
 
     private ObjectColorPicker mOnePicker;
 
-    public AugmentedRealityRenderer(Context context) {
+    private AugmentedRealityActivity _augmentedRealityActivity;
+
+    public AugmentedRealityRenderer(Context context, AugmentedRealityActivity augmentedRealityActivity) {
         super(context);
+        _augmentedRealityActivity = augmentedRealityActivity;
     }
 
     @Override
@@ -261,6 +269,7 @@ public class AugmentedRealityRenderer extends Renderer implements OnObjectPicked
             if (longPress) {
                 longPress = false;
                 //TODO: start voice assistant here
+                _augmentedRealityActivity.sendSpeech();
                 Log.d(TAG,"Voice assistant here");
             }
             else {
@@ -277,4 +286,6 @@ public class AugmentedRealityRenderer extends Renderer implements OnObjectPicked
         Log.d(TAG, "Picked no object");
         isPicked = false;
     }
+
+
 }

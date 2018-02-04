@@ -34,6 +34,7 @@ import android.Manifest;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -41,6 +42,7 @@ import android.hardware.display.DisplayManager;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -53,7 +55,10 @@ import org.rajawali3d.scene.ASceneFrameCallback;
 import org.rajawali3d.view.SurfaceView;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import static android.speech.RecognizerIntent.EXTRA_RESULTS;
 
 /**
  * This is a simple example that shows how to use the Tango APIs to create an augmented reality (AR)
@@ -79,6 +84,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class AugmentedRealityActivity extends Activity implements View.OnTouchListener {
     private static final String TAG = AugmentedRealityActivity.class.getSimpleName();
     private static final int INVALID_TEXTURE_ID = 0;
+
+    //voice
+    static final int SPEECH_REQUEST_CODE = 0;
 
     private static final String CAMERA_PERMISSION = Manifest.permission.CAMERA;
     private static final int CAMERA_PERMISSION_CODE = 0;
@@ -115,7 +123,7 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
         setContentView(R.layout.activity_ar);
         mSurfaceView = (SurfaceView) findViewById(R.id.surfaceview);
         mSurfaceView.setOnTouchListener(this);
-        mRenderer = new AugmentedRealityRenderer(this);
+        mRenderer = new AugmentedRealityRenderer(this, this);
 
         DisplayManager displayManager = (DisplayManager) getSystemService(DISPLAY_SERVICE);
         if (displayManager != null) {
@@ -136,7 +144,7 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
                 }
             }, null);
         }
-
+        getApplicationContext();
         setupRenderer();
     }
 
@@ -534,5 +542,31 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
     public boolean onTouch(View view, MotionEvent motionEvent) {
         mRenderer.onTouchEvent(motionEvent);
         return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent data) {
+        if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
+            List<String> results = data.getStringArrayListExtra(
+                    EXTRA_RESULTS);
+            String spokenText = results.get(0);
+            // Do something with spokenText
+            Log.i("On activity result", "Spoken text: " + spokenText);
+            Voice _voice = new Voice(spokenText);
+            _voice.parseSpotify();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void sendSpeech() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "com.projecttango.examples.java.augmentedreality");
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1000);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US");
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak, Human");
+        // Start the activity, the intent will be populated with the speech text
+        startActivityForResult(intent, SPEECH_REQUEST_CODE);
     }
 }
