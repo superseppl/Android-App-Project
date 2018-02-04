@@ -39,6 +39,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.display.DisplayManager;
+import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.os.Bundle;
@@ -544,6 +545,12 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
         return true;
     }
 
+    /**
+     * Gets the Voice input as text and starts the Voice Parsing
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode,
                                  Intent data) {
@@ -553,12 +560,15 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
             String spokenText = results.get(0);
             // Do something with spokenText
             Log.i("On activity result", "Spoken text: " + spokenText);
-            Voice _voice = new Voice(spokenText);
+            Voice _voice = new Voice(spokenText, this);
             _voice.parseSpotify();
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * Starts the Voice Input from Google
+     */
     public void sendSpeech() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "com.projecttango.examples.java.augmentedreality");
@@ -568,5 +578,18 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
         intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak, Human");
         // Start the activity, the intent will be populated with the speech text
         startActivityForResult(intent, SPEECH_REQUEST_CODE);
+    }
+
+    /**
+     * Opens a webpage
+     * @param url
+     */
+    public void openWebPage(String url) {
+        Uri webpage = Uri.parse(url);
+        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+
     }
 }
