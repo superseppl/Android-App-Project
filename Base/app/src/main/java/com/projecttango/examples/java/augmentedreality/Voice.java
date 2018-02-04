@@ -2,10 +2,6 @@ package com.projecttango.examples.java.augmentedreality;
 
 import android.util.Log;
 
-/**
- * Created by alek on 03/02/2018.
- */
-
 public class Voice {
 
     static String TAG = "Voice";
