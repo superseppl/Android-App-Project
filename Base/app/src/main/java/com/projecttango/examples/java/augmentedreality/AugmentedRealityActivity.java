@@ -310,8 +310,7 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
         final ImageView coverArtView = (ImageView) findViewById(R.id.imageView2);
 
         if (mMetadata != null && mMetadata.currentTrack != null) {
-            final String durationStr = String.format(" (%dms)", mMetadata.currentTrack.durationMs);
-            mMetadataText.setText(mMetadata.contextName + "\n" + mMetadata.currentTrack.name + " - " + mMetadata.currentTrack.artistName + durationStr);
+            mMetadataText.setText(mMetadata.contextName + "\n" + mMetadata.currentTrack.name);
 
             Picasso.with(this)
                     .load(mMetadata.currentTrack.albumCoverWebUrl)
