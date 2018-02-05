@@ -43,12 +43,13 @@
         android:layout_toStartOf="@+id/textView2"
         app:srcCompat="@android:drawable/sym_def_app_icon" />
 
-    <ImageView
+    <Button
         android:id="@+id/imageView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/textView2"
         android:layout_toEndOf="@+id/textView2"
-        app:srcCompat="@android:drawable/sym_def_app_icon" />
+        android:onClick="onLoginButtonClicked"
+        android:text="SPOTIFY"/>
 
 </RelativeLayout>
