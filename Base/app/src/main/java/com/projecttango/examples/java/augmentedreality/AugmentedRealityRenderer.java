@@ -275,6 +275,18 @@ public class AugmentedRealityRenderer extends Renderer implements OnObjectPicked
             else {
                 //TODO: start/pause song from Spotify here
                 Log.d(TAG,"Spotify here");
+
+                // Ifpause the sphere is clicked first time after login the playlist will be played after that each click will be resume/
+                if(AugmentedRealityActivity.FirstTimeClicked) {
+                    AugmentedRealityActivity.mPlayer.playUri(AugmentedRealityActivity.mOperationCallback, "spotify:user:spotify:playlist:37i9dQZF1DWWxPM4nWdhyI",0,0);
+                    AugmentedRealityActivity.FirstTimeClicked = false;
+                }
+                else if (AugmentedRealityActivity.mCurrentPlaybackState != null && AugmentedRealityActivity.mCurrentPlaybackState.isPlaying) {
+                    AugmentedRealityActivity.mPlayer.pause(AugmentedRealityActivity.mOperationCallback);
+                }
+                else {
+                    AugmentedRealityActivity.mPlayer.resume(AugmentedRealityActivity.mOperationCallback);
+                }
             }
         } else {
             isPicked = false;

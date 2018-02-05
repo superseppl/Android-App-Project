@@ -33,6 +33,8 @@ import com.squareup.picasso.Picasso;
 public class MySpotify extends Activity implements
         Player.NotificationCallback, ConnectionStateCallback {
 
+
+
     private static final String CLIENT_ID = "4b87f575fa9b4019ab1f575aaf71228b";
     private static final String REDIRECT_URI = "my-spotify-app-login://callback";
     private static final int REQUEST_CODE = 1337;
@@ -55,7 +57,7 @@ public class MySpotify extends Activity implements
             R.id.prev_button,
     };
 
-    private SpotifyPlayer mPlayer;
+    public static SpotifyPlayer mPlayer;
     private PlaybackState mCurrentPlaybackState;
     private BroadcastReceiver mNetworkStateReceiver;
     private Metadata mMetadata;

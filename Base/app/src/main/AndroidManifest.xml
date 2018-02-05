@@ -41,6 +41,7 @@
             android:required="true" />
 
         <activity
+            android:screenOrientation="portrait"
             android:name=".MainActivity"
             android:configChanges="orientation|screenSize">
             <intent-filter>
@@ -54,9 +55,11 @@
 
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".AugmentedRealityActivity"
             android:parentActivityName=".MainActivity" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".Setting"
             android:label="@string/title_activity_setting"
             android:parentActivityName=".MainActivity">

@@ -8,7 +8,8 @@ public class Voice {
 
     static String TAG = "Voice";
     static String[] playSynonyms = {"play", "start", "music"};
-    static String[] skipSynonyms = {"skip", "next"};
+    static String[] skipSynonyms = {"skip", "next", "skip to next"};
+    static String[] replaySynonyms = {"replay", "back", "go back", "play again", "skip to previous"};
     static String[] pauseSynonyms = {"pause", "stop", "enough"};
     static String[] moreInfoSynonyms = {"Give me more information", "More info please", "More info",
                                     "Information", "Planet information", "Tell me more",
@@ -37,12 +38,31 @@ public class Voice {
     public void parseSpotify() {
         if (playCase()) {
             // Spotify play
+            // Ifpause the sphere is clicked first time after login the playlist will be played after that each click will be resume/
+            if(_augmentedRealityActivity.FirstTimeClicked && _augmentedRealityActivity.mCurrentPlaybackState != null) {
+                _augmentedRealityActivity.mPlayer.playUri(_augmentedRealityActivity.mOperationCallback, "spotify:user:spotify:playlist:37i9dQZF1DWWxPM4nWdhyI",0,0);
+                _augmentedRealityActivity.FirstTimeClicked = false;
+            }
+            else if (_augmentedRealityActivity.mCurrentPlaybackState != null){
+                _augmentedRealityActivity.mPlayer.resume(_augmentedRealityActivity.mOperationCallback);
+            }
             Log.i(TAG, "Spotify Play");
         } else if (skipSongCase()) {
             // Spotify skip
+            if (_augmentedRealityActivity.mCurrentPlaybackState != null) {
+                _augmentedRealityActivity.mPlayer.skipToNext(_augmentedRealityActivity.mOperationCallback);
+            }
             Log.i(TAG, "Spotify Skip");
+        } else if(replayCase()) {
+            if (_augmentedRealityActivity.mCurrentPlaybackState != null) {
+                _augmentedRealityActivity.mPlayer.skipToPrevious(_augmentedRealityActivity.mOperationCallback);
+            }
+            Log.i(TAG, "Spotify Skip to Previous");
         } else if (pauseCase()) {
             // Spotify pause
+            if (_augmentedRealityActivity.mCurrentPlaybackState != null && _augmentedRealityActivity.mCurrentPlaybackState.isPlaying) {
+                _augmentedRealityActivity.mPlayer.pause(_augmentedRealityActivity.mOperationCallback);
+            }
             Log.i(TAG, "Spotify Pause");
         } else if (moreInfoCase()) {
             Log.i(TAG, "More info");
@@ -69,7 +89,15 @@ public class Voice {
 
     private boolean skipSongCase() {
         for (int synonym = 0; synonym < skipSynonyms.length; ++synonym ) {
-            if (_firstWord.equalsIgnoreCase(skipSynonyms[synonym]))
+            if (_query.equalsIgnoreCase(skipSynonyms[synonym]))
+                return true;
+        }
+        return false;
+    }
+
+    private boolean replayCase() {
+        for (int synonym = 0; synonym < replaySynonyms.length; ++synonym ) {
+            if (_query.equalsIgnoreCase(replaySynonyms[synonym]))
                 return true;
         }
         return false;
