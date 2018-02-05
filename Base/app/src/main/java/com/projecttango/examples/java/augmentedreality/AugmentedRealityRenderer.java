@@ -21,10 +21,14 @@ import com.google.tango.support.TangoSupport;
 import android.app.Activity;
 import android.content.Context;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
+import android.os.Handler;
+import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.animation.LinearInterpolator;
 
@@ -49,9 +53,12 @@ import org.rajawali3d.util.ObjectColorPicker;
 import org.rajawali3d.util.OnObjectPickedListener;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
+
+import static android.speech.RecognizerIntent.EXTRA_RESULTS;
 
 /**
  * Renderer that implements a basic augmented reality scene using Rajawali.
@@ -75,8 +82,11 @@ public class AugmentedRealityRenderer extends Renderer implements OnObjectPicked
 
     private ObjectColorPicker mOnePicker;
 
-    public AugmentedRealityRenderer(Context context) {
+    private AugmentedRealityActivity _augmentedRealityActivity;
+
+    public AugmentedRealityRenderer(Context context, AugmentedRealityActivity augmentedRealityActivity) {
         super(context);
+        _augmentedRealityActivity = augmentedRealityActivity;
     }
 
     @Override
@@ -223,30 +233,64 @@ public class AugmentedRealityRenderer extends Renderer implements OnObjectPicked
                                  int xPixelOffset, int yPixelOffset) {
     }
 
+    private final Handler handler = new Handler();
+    private final Runnable runnable = new Runnable() {
+        public void run() {
+            Log.i(TAG, "Long press!");
+            longPress = true;
+        }
+    };
+
+    static boolean longPress = false;
+    boolean mBooleanIsPressed = false;
     @Override
     public void onTouchEvent(MotionEvent event) {
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             Log.d(TAG, "Pick object attempt");
+            handler.postDelayed(runnable, 1000);
+            mBooleanIsPressed = true;
+        }
+        if(event.getAction() == MotionEvent.ACTION_UP) {
             mOnePicker.getObjectAt(event.getX(), event.getY());
+            if(mBooleanIsPressed) {
+                mBooleanIsPressed = false;
+                handler.removeCallbacks(runnable);
+            }
         }
 
-        if(event.getAction() == MotionEvent.ACTION_MOVE && isPicked){
-            Log.d("msg","Should work");
-        }
     }
 
     @Override
     public void onObjectPicked(@NonNull Object3D object) {
         Log.d(TAG, "Picked object: " + object.toString());
-        if(object.toString().toLowerCase().contains("sphere")){
+        if(object.toString().contains("Sphere")){
             isPicked = true;
-            Log.d(TAG, "Here should Spotifiy play Music");
-            //TODO: Integrate Spotify and make a simultan update for onTouchEvent
+            if (longPress) {
+                longPress = false;
+                //TODO: start voice assistant here
+                _augmentedRealityActivity.sendSpeech();
+                Log.d(TAG,"Voice assistant here");
+            }
+            else {
+                //TODO: start/pause song from Spotify here
+                Log.d(TAG,"Spotify here");
+
+                // Ifpause the sphere is clicked first time after login the playlist will be played after that each click will be resume/
+                if(AugmentedRealityActivity.FirstTimeClicked) {
+                    AugmentedRealityActivity.mPlayer.playUri(AugmentedRealityActivity.mOperationCallback, "spotify:user:spotify:playlist:37i9dQZF1DWWxPM4nWdhyI",0,0);
+                    AugmentedRealityActivity.FirstTimeClicked = false;
+                }
+                else if (AugmentedRealityActivity.mCurrentPlaybackState != null && AugmentedRealityActivity.mCurrentPlaybackState.isPlaying) {
+                    AugmentedRealityActivity.mPlayer.pause(AugmentedRealityActivity.mOperationCallback);
+                }
+                else {
+                    AugmentedRealityActivity.mPlayer.resume(AugmentedRealityActivity.mOperationCallback);
+                }
+            }
         } else {
             isPicked = false;
         }
-
     }
 
     @Override
@@ -254,4 +298,6 @@ public class AugmentedRealityRenderer extends Renderer implements OnObjectPicked
         Log.d(TAG, "Picked no object");
         isPicked = false;
     }
+
+
 }

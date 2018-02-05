@@ -55,5 +55,4 @@
         android:onClick="sendSettings"
         android:text="Settings" />
 
-
 </RelativeLayout>

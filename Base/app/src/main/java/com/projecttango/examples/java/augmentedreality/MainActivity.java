@@ -2,20 +2,34 @@ package com.projecttango.examples.java.augmentedreality;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
+import android.speech.RecognizerIntent;
+import android.util.Log;
+
 import android.util.TypedValue;
 import android.view.MotionEvent;
+
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
+
+import static android.speech.RecognizerIntent.EXTRA_RESULTS;
+
 public class MainActivity extends Activity {
 
     static Integer sphereSize = 45;
     static Integer sphereMap = 1;
+
+    static final int SPEECH_REQUEST_CODE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +75,37 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
+    public void sendSpeech(View view) {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "com.projecttango.examples.java.augmentedreality");
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1000);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US");
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak, Human");
+        // Start the activity, the intent will be populated with the speech text
+        startActivityForResult(intent, SPEECH_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent data) {
+        if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
+            List<String> results = data.getStringArrayListExtra(
+                    EXTRA_RESULTS);
+            String spokenText = results.get(0);
+            // Do something with spokenText
+            Log.i("On activity result", "Spoken text: " + spokenText);
+            Voice _voice = new Voice(spokenText);
+            _voice.parseSpotify();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
     public void playBack (){
         VideoView videoview = (VideoView) findViewById(R.id.videoView);
         Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.solarsystem);
         videoview.setVideoURI(uri);
         videoview.start();
+
     }
 }

@@ -34,13 +34,16 @@ import android.Manifest;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.display.DisplayManager;
+import android.net.Uri;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -53,7 +56,46 @@ import org.rajawali3d.scene.ASceneFrameCallback;
 import org.rajawali3d.view.SurfaceView;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+
+import static android.speech.RecognizerIntent.EXTRA_RESULTS;
+
+//.......................SPOTIFY.......................//
+
+import android.app.Activity;
+import android.os.Bundle;
+
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.spotify.sdk.android.authentication.AuthenticationClient;
+import com.spotify.sdk.android.authentication.AuthenticationRequest;
+import com.spotify.sdk.android.authentication.AuthenticationResponse;
+import com.spotify.sdk.android.player.Config;
+import com.spotify.sdk.android.player.ConnectionStateCallback;
+import com.spotify.sdk.android.player.Connectivity;
+import com.spotify.sdk.android.player.Error;
+import com.spotify.sdk.android.player.Metadata;
+import com.spotify.sdk.android.player.PlaybackState;
+import com.spotify.sdk.android.player.Player;
+import com.spotify.sdk.android.player.PlayerEvent;
+import com.spotify.sdk.android.player.Spotify;
+import com.spotify.sdk.android.player.SpotifyPlayer;
+import com.squareup.picasso.Picasso;
+
+//.......................SPOTIFY.......................//
+
 
 /**
  * This is a simple example that shows how to use the Tango APIs to create an augmented reality (AR)
@@ -76,9 +118,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * If you're looking for a more stripped down example that doesn't use a rendering library like
  * Rajawali, see java_hello_video_example.
  */
-public class AugmentedRealityActivity extends Activity implements View.OnTouchListener {
+public class AugmentedRealityActivity extends Activity implements View.OnTouchListener, Player.NotificationCallback, ConnectionStateCallback {
     private static final String TAG = AugmentedRealityActivity.class.getSimpleName();
     private static final int INVALID_TEXTURE_ID = 0;
+
+    //voice
+    static final int SPEECH_REQUEST_CODE = 0;
 
     private static final String CAMERA_PERMISSION = Manifest.permission.CAMERA;
     private static final int CAMERA_PERMISSION_CODE = 0;
@@ -98,6 +143,35 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
 
     private int mDisplayRotation = 0;
 
+    //.......................SPOTIFY.......................//
+
+    private static final String CLIENT_ID = "4b87f575fa9b4019ab1f575aaf71228b";
+    private static final String REDIRECT_URI = "my-spotify-app-login://callback";
+    private static final int REQUEST_CODE = 1337;
+    private static final String ALBUM_URI = "spotify:user:spotify:playlist:37i9dQZF1DWWxPM4nWdhyI";
+    public static final String TAG_SPOTIFY = "Spotify";
+
+    public static SpotifyPlayer mPlayer;
+    public static PlaybackState mCurrentPlaybackState;
+    private BroadcastReceiver mNetworkStateReceiver;
+    private Metadata mMetadata;
+    private TextView mMetadataText;
+    public static boolean FirstTimeClicked = true;
+
+    public static Player.OperationCallback mOperationCallback = new Player.OperationCallback() {
+        @Override
+        public void onSuccess() {
+            Log.d(TAG_SPOTIFY, "OK");
+        }
+
+        @Override
+        public void onError(Error error) {
+            Log.d(TAG_SPOTIFY, "ERROR");
+        }
+    };
+
+    //.......................SPOTIFY.......................//
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Intent intent = getIntent();
@@ -115,7 +189,7 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
         setContentView(R.layout.activity_ar);
         mSurfaceView = (SurfaceView) findViewById(R.id.surfaceview);
         mSurfaceView.setOnTouchListener(this);
-        mRenderer = new AugmentedRealityRenderer(this);
+        mRenderer = new AugmentedRealityRenderer(this, this);
 
         DisplayManager displayManager = (DisplayManager) getSystemService(DISPLAY_SERVICE);
         if (displayManager != null) {
@@ -136,9 +210,217 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
                 }
             }, null);
         }
-
+        getApplicationContext();
         setupRenderer();
+
+        //update Song's information
+        mMetadataText = (TextView) findViewById(R.id.textView2);
+        updateView();
+
     }
+
+    //.......................SPOTIFY.......................//
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // Set up the broadcast receiver for network events. Note that we also unregister
+        // this receiver again in onPause().
+        mNetworkStateReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (mPlayer != null) {
+                    Connectivity connectivity = getNetworkConnectivity(getBaseContext());
+                    mPlayer.setConnectivityStatus(mOperationCallback, connectivity);
+                }
+            }
+        };
+
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(mNetworkStateReceiver, filter);
+
+        if (mPlayer != null) {
+            mPlayer.addNotificationCallback(AugmentedRealityActivity.this);
+            mPlayer.addConnectionStateCallback(AugmentedRealityActivity.this);
+        }
+    }
+
+    private Connectivity getNetworkConnectivity(Context context) {
+        ConnectivityManager connectivityManager;
+        connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+        if (activeNetwork != null && activeNetwork.isConnected()) {
+            return Connectivity.fromNetworkType(activeNetwork.getType());
+        } else {
+            return Connectivity.OFFLINE;
+        }
+    }
+
+    // AUTHENTICATION
+
+    private void openLoginWindow() {
+        final AuthenticationRequest request = new AuthenticationRequest.Builder(CLIENT_ID, AuthenticationResponse.Type.TOKEN, REDIRECT_URI)
+                .setShowDialog(true)
+                .setScopes(new String[]{"user-read-private", "playlist-read", "playlist-read-private", "streaming"})
+                .build();
+
+        AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        // Check if result comes from the correct activity
+        if (requestCode == REQUEST_CODE) {
+            AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
+            switch (response.getType()) {
+                // Response was successful and contains auth token
+                case TOKEN:
+                    onAuthenticationComplete(response);
+                    break;
+                case ERROR:
+                    Log.d(TAG_SPOTIFY, "auth error...");
+                    break;
+                default:
+                    Log.d(TAG_SPOTIFY, "auth result..." + response.getType());
+            }
+        } else if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
+            List<String> results = intent.getStringArrayListExtra(
+                    EXTRA_RESULTS);
+            String spokenText = results.get(0);
+            // Do something with spokenText
+            Log.i("On activity result", "Spoken text: " + spokenText);
+            Voice _voice = new Voice(spokenText, this);
+            _voice.parseSpotify();
+        }
+        super.onActivityResult(requestCode, resultCode, intent);
+    }
+
+    private void onAuthenticationComplete(AuthenticationResponse authResponse) {
+
+        Log.d(TAG_SPOTIFY, "got authentication token");
+        if (mPlayer == null) {
+
+            Config playerConfig = new Config(getApplicationContext(), authResponse.getAccessToken(), CLIENT_ID);
+            mPlayer = com.spotify.sdk.android.player.Spotify.getPlayer(playerConfig, this, new SpotifyPlayer.InitializationObserver() {
+                @Override
+                public void onInitialized(SpotifyPlayer player) {
+                    Log.d(TAG_SPOTIFY, "\"-- Player initialized --\"");
+                    mPlayer.setConnectivityStatus(mOperationCallback, getNetworkConnectivity(AugmentedRealityActivity.this));
+                    mPlayer.addNotificationCallback(AugmentedRealityActivity.this);
+                    mPlayer.addConnectionStateCallback(AugmentedRealityActivity.this);
+                    updateView();
+                }
+
+                @Override
+                public void onError(Throwable error) {
+                    Log.d(TAG_SPOTIFY, "\"Error in initialization: \"" + error.getMessage());
+                }
+            });
+        } else {
+            mPlayer.login(authResponse.getAccessToken());
+        }
+    }
+
+    // UI EVENTS
+
+    private void updateView() {
+
+        final ImageView coverArtView = (ImageView) findViewById(R.id.imageView2);
+
+        if (mMetadata != null && mMetadata.currentTrack != null) {
+            mMetadataText.setText(mMetadata.contextName + "\n" + mMetadata.currentTrack.name);
+
+            Picasso.with(this)
+                    .load(mMetadata.currentTrack.albumCoverWebUrl)
+                    .into(coverArtView);
+        } else {
+            mMetadataText.setText("Please log in as a Premium User");
+            coverArtView.setBackground(null);
+        }
+
+    }
+
+    private boolean isLoggedIn() {
+        return mPlayer != null && mPlayer.isLoggedIn();
+    }
+
+    public void onLoginButtonClicked(View view) {
+        if (!isLoggedIn()) {
+            Log.d("msg", "Logging in");
+            openLoginWindow();
+        } else {
+            Log.d("msg", "Logging out");
+            mPlayer.logout();
+            FirstTimeClicked = true;
+        }
+    }
+
+    // CALLBACK METHODS
+
+    @Override
+    public void onLoggedIn() {
+        Log.d("msg", "Login complete");
+        updateView();
+    }
+
+    @Override
+    public void onLoggedOut() {
+        Log.d("msg", "Logout complete");
+        updateView();
+    }
+
+    public void onLoginFailed(Error error) {
+        Log.d("msg", "Login error" + error);
+    }
+
+    @Override
+    public void onTemporaryError() {
+        Log.d("msg", "Temporary error occured");
+    }
+
+    @Override
+    public void onConnectionMessage(final String message) {
+        Log.d(TAG_SPOTIFY, "Incoming connection message: " + message);
+    }
+
+    // DESTRUCTION
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mNetworkStateReceiver);
+
+        if (mPlayer != null) {
+            mPlayer.removeNotificationCallback(AugmentedRealityActivity.this);
+            mPlayer.removeConnectionStateCallback(AugmentedRealityActivity.this);
+        }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        com.spotify.sdk.android.player.Spotify.destroyPlayer(this);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onPlaybackEvent(PlayerEvent event) {
+        Log.d(TAG_SPOTIFY, "Event: " + event);
+        mCurrentPlaybackState = mPlayer.getPlaybackState();
+        mMetadata = mPlayer.getMetadata();
+        Log.i(TAG_SPOTIFY, "Player state: " + mCurrentPlaybackState);
+        Log.i(TAG_SPOTIFY, "Metadata: " + mMetadata);
+        updateView();
+    }
+
+    @Override
+    public void onPlaybackError(Error error) {
+        Log.d(TAG_SPOTIFY, "Err: " + error);
+    }
+
+    //.......................SPOTIFY.......................//
 
     @Override
     protected void onStart() {
@@ -534,5 +816,54 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
     public boolean onTouch(View view, MotionEvent motionEvent) {
         mRenderer.onTouchEvent(motionEvent);
         return true;
+    }
+
+    /**
+     * Gets the Voice input as text and starts the Voice Parsing
+     * @param requestCode
+     * @param resultCode
+     * @param data
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,
+                                 Intent data) {
+        if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
+            List<String> results = data.getStringArrayListExtra(
+                    EXTRA_RESULTS);
+            String spokenText = results.get(0);
+            // Do something with spokenText
+            Log.i("On activity result", "Spoken text: " + spokenText);
+            Voice _voice = new Voice(spokenText, this);
+            _voice.parseSpotify();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+    */
+
+    /**
+     * Starts the Voice Input from Google
+     */
+    public void sendSpeech() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "com.projecttango.examples.java.augmentedreality");
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1000);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "en-US");
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Speak, Human");
+        // Start the activity, the intent will be populated with the speech text
+        startActivityForResult(intent, SPEECH_REQUEST_CODE);
+    }
+
+    /**
+     * Opens a webpage
+     * @param url
+     */
+    public void openWebPage(String url) {
+        Uri webpage = Uri.parse(url);
+        Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+
     }
 }
