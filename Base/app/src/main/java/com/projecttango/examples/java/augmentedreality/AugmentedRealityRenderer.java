@@ -15,27 +15,19 @@
  */
 package com.projecttango.examples.java.augmentedreality;
 
-import com.google.atap.tangoservice.TangoPoseData;
-import com.google.tango.support.TangoSupport;
-
-import android.app.Activity;
 import android.content.Context;
-
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.os.Handler;
-import android.speech.RecognizerIntent;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.animation.LinearInterpolator;
+
+import com.google.atap.tangoservice.TangoPoseData;
+import com.google.tango.support.TangoSupport;
 
 import org.rajawali3d.Object3D;
 import org.rajawali3d.animation.Animation;
 import org.rajawali3d.animation.Animation3D;
-import org.rajawali3d.animation.EllipticalOrbitAnimation3D;
 import org.rajawali3d.animation.RotateOnAxisAnimation;
 import org.rajawali3d.lights.DirectionalLight;
 import org.rajawali3d.materials.Material;
@@ -53,12 +45,9 @@ import org.rajawali3d.util.ObjectColorPicker;
 import org.rajawali3d.util.OnObjectPickedListener;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.microedition.khronos.opengles.GL10;
-
-import static android.speech.RecognizerIntent.EXTRA_RESULTS;
 
 /**
  * Renderer that implements a basic augmented reality scene using Rajawali.
@@ -243,21 +232,34 @@ public class AugmentedRealityRenderer extends Renderer implements OnObjectPicked
 
     static boolean longPress = false;
     boolean mBooleanIsPressed = false;
+    float pointerDownX = 0;
+    float pointerDownY = 0;
+    float pointerUpX = 0;
+    float pointerUpY = 0;
+
     @Override
     public void onTouchEvent(MotionEvent event) {
-
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             Log.d(TAG, "Pick object attempt");
             handler.postDelayed(runnable, 1000);
             mBooleanIsPressed = true;
+
+            pointerDownX = event.getX();
+            pointerDownY = event.getY();
+
         }
         if(event.getAction() == MotionEvent.ACTION_UP) {
             mOnePicker.getObjectAt(event.getX(), event.getY());
+
+            pointerUpX = event.getX();
+            pointerUpY = event.getY();
+
             if(mBooleanIsPressed) {
                 mBooleanIsPressed = false;
                 handler.removeCallbacks(runnable);
             }
         }
+        //Log.d("msg", "Detected: " + pointerDownX + "|" + pointerDownY + "|" + pointerUpX + "|" + pointerUpY);
 
     }
 
@@ -265,16 +267,33 @@ public class AugmentedRealityRenderer extends Renderer implements OnObjectPicked
     public void onObjectPicked(@NonNull Object3D object) {
         Log.d(TAG, "Picked object: " + object.toString());
         if(object.toString().contains("Sphere")){
-            isPicked = true;
             if (longPress) {
                 longPress = false;
-                //TODO: start voice assistant here
+
                 _augmentedRealityActivity.sendSpeech();
                 Log.d(TAG,"Voice assistant here");
             }
             else {
-                //TODO: start/pause song from Spotify here
                 Log.d(TAG,"Spotify here");
+
+                //TODO: simple gesture detection
+                if(Math.abs(pointerDownX-pointerUpX) > Math.abs(pointerDownY-pointerUpY)) {
+                    if (pointerDownX < pointerUpX) {
+                        //right
+                        Log.d("TOUCH", "RIGHT");
+                    } else if (pointerDownX > pointerUpX) {
+                        //left
+                        Log.d("TOUCH", "LEFT");
+                    }
+                } else {
+                    if (pointerDownY < pointerUpY) {
+                        //down
+                        Log.d("TOUCH", "DOWN");
+                    } else if (pointerDownY > pointerUpY) {
+                        //up
+                        Log.d("TOUCH", "UP");
+                    }
+                }
 
                 // Ifpause the sphere is clicked first time after login the playlist will be played after that each click will be resume/
                 if(AugmentedRealityActivity.FirstTimeClicked) {
@@ -288,15 +307,12 @@ public class AugmentedRealityRenderer extends Renderer implements OnObjectPicked
                     AugmentedRealityActivity.mPlayer.resume(AugmentedRealityActivity.mOperationCallback);
                 }
             }
-        } else {
-            isPicked = false;
         }
     }
 
     @Override
     public void onNoObjectPicked() {
         Log.d(TAG, "Picked no object");
-        isPicked = false;
     }
 
 

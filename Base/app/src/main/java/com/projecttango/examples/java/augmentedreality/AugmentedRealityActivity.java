@@ -38,6 +38,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.ImageFormat;
 import android.hardware.display.DisplayManager;
 import android.net.Uri;
 import android.opengl.GLSurfaceView;
@@ -347,11 +348,14 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
     }
 
     public void onLoginButtonClicked(View view) {
+        Button button = (Button) findViewById(R.id.imageView3);
         if (!isLoggedIn()) {
             Log.d("msg", "Logging in");
+            button.setVisibility(View.INVISIBLE);
             openLoginWindow();
         } else {
             Log.d("msg", "Logging out");
+            button.setVisibility(View.VISIBLE);
             mPlayer.logout();
             FirstTimeClicked = true;
         }
