@@ -277,34 +277,42 @@ public class AugmentedRealityRenderer extends Renderer implements OnObjectPicked
                 Log.d(TAG,"Spotify here");
 
                 //TODO: simple gesture detection
-                if(Math.abs(pointerDownX-pointerUpX) > Math.abs(pointerDownY-pointerUpY)) {
-                    if (pointerDownX < pointerUpX) {
-                        //right
-                        Log.d("TOUCH", "RIGHT");
-                    } else if (pointerDownX > pointerUpX) {
-                        //left
-                        Log.d("TOUCH", "LEFT");
-                    }
-                } else {
-                    if (pointerDownY < pointerUpY) {
-                        //down
-                        Log.d("TOUCH", "DOWN");
-                    } else if (pointerDownY > pointerUpY) {
-                        //up
-                        Log.d("TOUCH", "UP");
-                    }
-                }
 
-                // Ifpause the sphere is clicked first time after login the playlist will be played after that each click will be resume/
-                if(AugmentedRealityActivity.FirstTimeClicked) {
-                    AugmentedRealityActivity.mPlayer.playUri(AugmentedRealityActivity.mOperationCallback, "spotify:user:spotify:playlist:37i9dQZF1DWWxPM4nWdhyI",0,0);
-                    AugmentedRealityActivity.FirstTimeClicked = false;
-                }
-                else if (AugmentedRealityActivity.mCurrentPlaybackState != null && AugmentedRealityActivity.mCurrentPlaybackState.isPlaying) {
-                    AugmentedRealityActivity.mPlayer.pause(AugmentedRealityActivity.mOperationCallback);
+                if(!AugmentedRealityActivity.isLoggedIn()){
+                    //Do nothing if user didn't log in yet
                 }
                 else {
-                    AugmentedRealityActivity.mPlayer.resume(AugmentedRealityActivity.mOperationCallback);
+
+                    if (Math.abs(pointerDownX - pointerUpX) > Math.abs(pointerDownY - pointerUpY)) {
+                        if (pointerDownX < pointerUpX) {
+                            //right
+                            Log.d("TOUCH", "RIGHT");
+                            AugmentedRealityActivity.mPlayer.skipToNext(AugmentedRealityActivity.mOperationCallback);
+                        } else if (pointerDownX > pointerUpX) {
+                            //left
+                            Log.d("TOUCH", "LEFT");
+                            AugmentedRealityActivity.mPlayer.skipToPrevious(AugmentedRealityActivity.mOperationCallback);
+                        }
+                    } else {
+                        if (pointerDownY < pointerUpY) {
+                            //down
+                            Log.d("TOUCH", "DOWN");
+                        } else if (pointerDownY > pointerUpY) {
+                            //up
+                            Log.d("TOUCH", "UP");
+                        }
+                    }
+
+                    // If the sphere is clicked first time after login the playlist will be played after that each click will be resume/pause
+                    if (AugmentedRealityActivity.FirstTimeClicked) {
+                        AugmentedRealityActivity.mPlayer.playUri(AugmentedRealityActivity.mOperationCallback, "spotify:user:spotify:playlist:37i9dQZF1DWWxPM4nWdhyI", 0, 0);
+                        AugmentedRealityActivity.FirstTimeClicked = false;
+                    } else if (AugmentedRealityActivity.mCurrentPlaybackState != null && AugmentedRealityActivity.mCurrentPlaybackState.isPlaying) {
+                        AugmentedRealityActivity.mPlayer.pause(AugmentedRealityActivity.mOperationCallback);
+                    } else {
+                        AugmentedRealityActivity.mPlayer.resume(AugmentedRealityActivity.mOperationCallback);
+                    }
+
                 }
             }
         }

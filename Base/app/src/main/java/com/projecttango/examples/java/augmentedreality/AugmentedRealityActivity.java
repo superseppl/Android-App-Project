@@ -343,7 +343,7 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
 
     }
 
-    private boolean isLoggedIn() {
+    public static boolean isLoggedIn() {
         return mPlayer != null && mPlayer.isLoggedIn();
     }
 
@@ -367,12 +367,16 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
     public void onLoggedIn() {
         Log.d("msg", "Login complete");
         updateView();
+        Toast.makeText(getApplicationContext(), "Login complete",
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onLoggedOut() {
         Log.d("msg", "Logout complete");
         updateView();
+        Toast.makeText(getApplicationContext(), "Logout complete",
+                Toast.LENGTH_SHORT).show();
     }
 
     public void onLoginFailed(Error error) {
@@ -407,6 +411,7 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
     protected void onDestroy() {
         com.spotify.sdk.android.player.Spotify.destroyPlayer(this);
         super.onDestroy();
+        FirstTimeClicked = true;
     }
 
     @Override
