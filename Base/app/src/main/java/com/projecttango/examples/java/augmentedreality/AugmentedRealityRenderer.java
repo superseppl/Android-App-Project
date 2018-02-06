@@ -295,10 +295,10 @@ public class AugmentedRealityRenderer extends Renderer implements OnObjectPicked
                         }
                     } else {
                         if (pointerDownY < pointerUpY) {
-                            //down
+                            AugmentedRealityActivity.mPlayer.setRepeat(AugmentedRealityActivity.mOperationCallback, true);
                             Log.d("TOUCH", "DOWN");
                         } else if (pointerDownY > pointerUpY) {
-                            //up
+                            AugmentedRealityActivity.mPlayer.setShuffle(AugmentedRealityActivity.mOperationCallback, true);
                             Log.d("TOUCH", "UP");
                         }
                     }
