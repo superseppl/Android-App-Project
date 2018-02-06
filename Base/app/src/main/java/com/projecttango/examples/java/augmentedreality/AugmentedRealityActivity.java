@@ -55,6 +55,7 @@ import android.widget.Toast;
 
 import org.rajawali3d.scene.ASceneFrameCallback;
 import org.rajawali3d.view.SurfaceView;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -367,6 +368,9 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
     public void onLoggedIn() {
         Log.d("msg", "Login complete");
         updateView();
+        mMetadataText = (TextView)findViewById(R.id.textView2);
+        mMetadataText.setText("Please touch the sphere to start the music");
+
         Toast.makeText(getApplicationContext(), "Login complete",
                 Toast.LENGTH_SHORT).show();
     }
