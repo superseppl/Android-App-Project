@@ -27,12 +27,11 @@
         android:layout_gravity="top" />
 
 
-
     <ImageView
         android:id="@+id/imageView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/imageView3"
+        android:layout_above="@+id/textView2"
         android:layout_centerHorizontal="true"
         app:srcCompat="@android:drawable/sym_def_app_icon" />
 
@@ -44,6 +43,8 @@
         android:layout_centerHorizontal="true"
         android:gravity="center"
         android:layout_marginBottom="20dp"
+        android:paddingRight="5dp"
+        android:paddingLeft="5dp"
         android:text="TextView"
         android:background="#37474f" />
 

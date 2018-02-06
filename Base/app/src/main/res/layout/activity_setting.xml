@@ -22,9 +22,20 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="23dp"
+        android:layout_marginTop="25dp"
         android:text="Size"
         android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/spinner"
+        android:layout_below="@+id/spinner"
+        android:text="Information"
+        android:layout_marginTop="25dp"
+        android:textSize="24sp"
+        />
 
     <SeekBar
         android:id="@+id/seekBar2"
@@ -40,7 +51,7 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/seekBar2"
         android:layout_below="@+id/seekBar2"
-        android:layout_marginTop="23dp"
+        android:layout_marginTop="25dp"
         android:text="Mapping"
         android:textSize="24sp" />
 
@@ -51,5 +62,13 @@
         android:layout_alignParentEnd="true"
         android:layout_alignStart="@+id/mapping"
         android:layout_below="@+id/mapping" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/info"
+        android:layout_below="@+id/info"
+        android:text="@string/Information" />
 
 </RelativeLayout>
