@@ -22,6 +22,7 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
         setContentView(R.layout.activity_setting);
         getActionBar().setDisplayHomeAsUpEnabled(false);
 
+        /** Getting the Values from Main **/
         sphereSize = getIntent().getIntExtra("size", 45);
         sphereMap = getIntent().getIntExtra("map", 1);
 
@@ -33,7 +34,7 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
         spinner.setSelection(sphereMap);
         spinner.setOnItemSelectedListener(this);
 
-        ////Set the Seekbar with Progress and Listener
+        /** Set the Seekbar with Progess and Listener **/
         SeekBar seekBar= (SeekBar) findViewById(R.id.seekBar2);
         seekBar.setProgress(sphereSize);
 
@@ -66,6 +67,7 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
         // Another interface callback
     }
 
+    /** Self Explained **/
     public void sendSettingsToMain(View view) {
         Intent sendSettingsToMain = new Intent(Setting.this , MainActivity.class);
         sendSettingsToMain.putExtra("size", sphereSize);
@@ -73,6 +75,7 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
         startActivity(sendSettingsToMain);
     }
 
+    /** Function which sends the values to Main **/
     @Override
     public void onBackPressed() {
         Intent sendSettingsToMain = new Intent(Setting.this , MainActivity.class);

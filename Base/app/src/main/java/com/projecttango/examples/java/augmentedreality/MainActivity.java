@@ -26,6 +26,7 @@ import static android.speech.RecognizerIntent.EXTRA_RESULTS;
 
 public class MainActivity extends Activity {
 
+    /** Global Variables **/
     static Integer sphereSize = 45;
     static Integer sphereMap = 1;
 
@@ -52,17 +53,20 @@ public class MainActivity extends Activity {
     public void onResume() {
         super.onResume();
 
+        //Reciving information
         sphereSize = getIntent().getIntExtra("size", 45);
         sphereMap = getIntent().getIntExtra("map", 1);
 
         playBack();
     }
 
+    /**Method that will start the AugmentedRealityActivity **/
     public void sendStart(View view) {
         Intent intent = new Intent(MainActivity.this, AugmentedRealityActivity.class);
         startActivity(intent);
     }
 
+    /** Method that will start the SettingsActivity **/
     public void sendSettings(View view) {
         Intent sendSettingsToSetting = new Intent(MainActivity.this, Setting.class);
         sendSettingsToSetting.putExtra("size", sphereSize);
@@ -70,11 +74,14 @@ public class MainActivity extends Activity {
         startActivity(sendSettingsToSetting);
     }
 
+    /** Method that will start the SpotifyActivity **/
     public void sendSpotify(View view) {
         Intent intent = new Intent(MainActivity.this, MySpotify.class);
         startActivity(intent);
     }
 
+
+    /** Method that will start the SpeechActivity **/
     public void sendSpeech(View view) {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "com.projecttango.examples.java.augmentedreality");
@@ -86,6 +93,8 @@ public class MainActivity extends Activity {
         startActivityForResult(intent, SPEECH_REQUEST_CODE);
     }
 
+
+    /** Get the result of the code **/
     @Override
     public void onActivityResult(int requestCode, int resultCode,
                                  Intent data) {
@@ -101,6 +110,8 @@ public class MainActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+
+    /** Animation for the Background **/
     public void playBack (){
         VideoView videoview = (VideoView) findViewById(R.id.videoView);
         Uri uri = Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.solarsystem);
