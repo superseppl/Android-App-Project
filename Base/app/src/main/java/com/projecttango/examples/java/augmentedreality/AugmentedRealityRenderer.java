@@ -271,6 +271,10 @@ public class AugmentedRealityRenderer extends Renderer implements OnObjectPicked
 
     }
 
+    /**
+     * Call back when the object is picked (pressed, long pressed...)
+     * @param object
+     */
     @Override
     public void onObjectPicked(@NonNull Object3D object) {
         Log.d(TAG, "Picked object: " + object.toString());

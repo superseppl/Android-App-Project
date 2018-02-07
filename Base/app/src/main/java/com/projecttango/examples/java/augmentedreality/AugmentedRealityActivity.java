@@ -124,7 +124,9 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
     private static final String TAG = AugmentedRealityActivity.class.getSimpleName();
     private static final int INVALID_TEXTURE_ID = 0;
 
-    //voice
+    /**
+     * Voice request code for the intent
+     */
     static final int SPEECH_REQUEST_CODE = 0;
 
     private static final String CAMERA_PERMISSION = Manifest.permission.CAMERA;
@@ -269,10 +271,17 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
         AuthenticationClient.openLoginActivity(this, REQUEST_CODE, request);
     }
 
+    /**
+     * Intent callback when intent finished.
+     * Based on the Request code:
+     * Voice: Get the Voice Input as a String and Parse it (_voice.parseSpotify)
+     * @param requestCode Spotify or Voice
+     * @param resultCode OK
+     * @param intent data from the intent
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
-
         // Check if result comes from the correct activity
         if (requestCode == REQUEST_CODE) {
             AuthenticationResponse response = AuthenticationClient.getResponse(resultCode, intent);
@@ -290,11 +299,11 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
         } else if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
             List<String> results = intent.getStringArrayListExtra(
                     EXTRA_RESULTS);
-            String spokenText = results.get(0);
+            String spokenText = results.get(0); // get the Voice Input as a string
             // Do something with spokenText
-            Log.i("On activity result", "Spoken text: " + spokenText);
-            Voice _voice = new Voice(spokenText, this);
-            _voice.parseSpotify();
+            Log.i("On activity result", "Spoken text: " + spokenText); // Log
+            Voice _voice = new Voice(spokenText, this); // create a new Voice object
+            _voice.parseSpotify(); // Parse the input
         }
         super.onActivityResult(requestCode, resultCode, intent);
     }
@@ -832,29 +841,7 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
     }
 
     /**
-     * Gets the Voice input as text and starts the Voice Parsing.
-     * @param requestCode
-     * @param resultCode
-     * @param data
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode,
-                                 Intent data) {
-        if (requestCode == SPEECH_REQUEST_CODE && resultCode == RESULT_OK) {
-            List<String> results = data.getStringArrayListExtra(
-                    EXTRA_RESULTS);
-            String spokenText = results.get(0);
-            // Do something with spokenText
-            Log.i("On activity result", "Spoken text: " + spokenText);
-            Voice _voice = new Voice(spokenText, this);
-            _voice.parseSpotify();
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-    */
-
-    /**
-     * Starts the Voice Input from Google.
+     * Starts Google's Speech API via Intent.
      */
     public void sendSpeech() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -868,8 +855,8 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
     }
 
     /**
-     * Opens a web page.
-     * @param url
+     * Opens a web page via Intent
+     * @param url the URL of the web page
      */
     public void openWebPage(String url) {
         Uri webpage = Uri.parse(url);
