@@ -832,7 +832,7 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
     }
 
     /**
-     * Gets the Voice input as text and starts the Voice Parsing
+     * Gets the Voice input as text and starts the Voice Parsing.
      * @param requestCode
      * @param resultCode
      * @param data
@@ -854,7 +854,7 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
     */
 
     /**
-     * Starts the Voice Input from Google
+     * Starts the Voice Input from Google.
      */
     public void sendSpeech() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -868,7 +868,7 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
     }
 
     /**
-     * Opens a webpage
+     * Opens a web page.
      * @param url
      */
     public void openWebPage(String url) {

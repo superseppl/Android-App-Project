@@ -230,6 +230,14 @@ public class AugmentedRealityRenderer extends Renderer implements OnObjectPicked
         }
     };
 
+    /**
+     * Defines gestures on the sphere.
+     * - swipe right: play next song
+     * - swipe left: play prev song
+     * - swipe up: shuffle the music
+     * - swipe down: repeat a song
+     * - logpress: voice assistant
+     */
     static boolean longPress = false;
     boolean mBooleanIsPressed = false;
     float pointerDownX = 0;
@@ -269,20 +277,15 @@ public class AugmentedRealityRenderer extends Renderer implements OnObjectPicked
         if(object.toString().contains("Sphere")){
             if (longPress) {
                 longPress = false;
-
-                _augmentedRealityActivity.sendSpeech();
                 Log.d(TAG,"Voice assistant here");
+                _augmentedRealityActivity.sendSpeech();
             }
             else {
                 Log.d(TAG,"Spotify here");
-
-                //TODO: simple gesture detection
-
                 if(!AugmentedRealityActivity.isLoggedIn()){
                     //Do nothing if user didn't log in yet
                 }
                 else {
-
                     if (Math.abs(pointerDownX - pointerUpX) > Math.abs(pointerDownY - pointerUpY)) {
                         if (pointerDownX < pointerUpX) {
                             //right
