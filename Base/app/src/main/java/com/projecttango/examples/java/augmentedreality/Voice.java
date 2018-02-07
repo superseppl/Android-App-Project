@@ -39,7 +39,7 @@ public class Voice {
         if (playCase()) {
             // Spotify play
             // Ifpause the sphere is clicked first time after login the playlist will be played after that each click will be resume/
-            if(AugmentedRealityActivity.FirstTimeClicked && AugmentedRealityActivity.mCurrentPlaybackState != null) {
+            if(AugmentedRealityActivity.FirstTimeClicked) {
                 AugmentedRealityActivity.mPlayer.playUri(AugmentedRealityActivity.mOperationCallback, "spotify:user:spotify:playlist:37i9dQZF1DWWxPM4nWdhyI", 0, 0);
                 AugmentedRealityActivity.FirstTimeClicked = false;
             }
