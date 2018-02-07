@@ -48,7 +48,7 @@ public class Setting extends Activity implements AdapterView.OnItemSelectedListe
             }
 
             public void onStopTrackingTouch(SeekBar seekBar) {
-                Toast.makeText(Setting.this, "Size of Sphere is" + sphereSize,
+                Toast.makeText(Setting.this, "Size of Sphere is " + sphereSize,
                         Toast.LENGTH_SHORT).show();
             }
         });
