@@ -39,29 +39,29 @@ public class Voice {
         if (playCase()) {
             // Spotify play
             // Ifpause the sphere is clicked first time after login the playlist will be played after that each click will be resume/
-            if(_augmentedRealityActivity.FirstTimeClicked && _augmentedRealityActivity.mCurrentPlaybackState != null) {
-                _augmentedRealityActivity.mPlayer.playUri(_augmentedRealityActivity.mOperationCallback, "spotify:user:spotify:playlist:37i9dQZF1DWWxPM4nWdhyI",0,0);
-                _augmentedRealityActivity.FirstTimeClicked = false;
+            if(AugmentedRealityActivity.FirstTimeClicked && AugmentedRealityActivity.mCurrentPlaybackState != null) {
+                AugmentedRealityActivity.mPlayer.playUri(AugmentedRealityActivity.mOperationCallback, "spotify:user:spotify:playlist:37i9dQZF1DWWxPM4nWdhyI", 0, 0);
+                AugmentedRealityActivity.FirstTimeClicked = false;
             }
-            else if (_augmentedRealityActivity.mCurrentPlaybackState != null){
-                _augmentedRealityActivity.mPlayer.resume(_augmentedRealityActivity.mOperationCallback);
+            else if (AugmentedRealityActivity.mCurrentPlaybackState != null){
+                AugmentedRealityActivity.mPlayer.resume(AugmentedRealityActivity.mOperationCallback);
             }
             Log.i(TAG, "Spotify Play");
         } else if (skipSongCase()) {
             // Spotify skip
-            if (_augmentedRealityActivity.mCurrentPlaybackState != null) {
-                _augmentedRealityActivity.mPlayer.skipToNext(_augmentedRealityActivity.mOperationCallback);
+            if (AugmentedRealityActivity.mCurrentPlaybackState != null) {
+                AugmentedRealityActivity.mPlayer.skipToNext(AugmentedRealityActivity.mOperationCallback);
             }
             Log.i(TAG, "Spotify Skip");
         } else if(replayCase()) {
-            if (_augmentedRealityActivity.mCurrentPlaybackState != null) {
-                _augmentedRealityActivity.mPlayer.skipToPrevious(_augmentedRealityActivity.mOperationCallback);
+            if (AugmentedRealityActivity.mCurrentPlaybackState != null) {
+                AugmentedRealityActivity.mPlayer.skipToPrevious(AugmentedRealityActivity.mOperationCallback);
             }
             Log.i(TAG, "Spotify Skip to Previous");
         } else if (pauseCase()) {
             // Spotify pause
-            if (_augmentedRealityActivity.mCurrentPlaybackState != null && _augmentedRealityActivity.mCurrentPlaybackState.isPlaying) {
-                _augmentedRealityActivity.mPlayer.pause(_augmentedRealityActivity.mOperationCallback);
+            if (AugmentedRealityActivity.mCurrentPlaybackState != null && AugmentedRealityActivity.mCurrentPlaybackState.isPlaying) {
+                AugmentedRealityActivity.mPlayer.pause(AugmentedRealityActivity.mOperationCallback);
             }
             Log.i(TAG, "Spotify Pause");
         } else if (moreInfoCase()) {
