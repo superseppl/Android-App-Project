@@ -35,11 +35,11 @@
     </string-array>
     <string name="Information">
         You can make following gestures on the sphere:
-        \n # swipe right: play next song
-        \n # swipe left: play previous song
-        \n # swipe up: shuffle your music
-        \n # swipe down: repeat that song
-        \n # longpress: start google voice assistant
+        \n - swipe right: play next song
+        \n - swipe left: play previous song
+        \n - swipe up: shuffle your music
+        \n - swipe down: repeat that song
+        \n - longpress: start google voice assistant
         </string>
 
 </resources>
