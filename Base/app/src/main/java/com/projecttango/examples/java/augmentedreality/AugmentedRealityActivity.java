@@ -338,6 +338,12 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
 
     private void updateView() {
 
+        if(isLoggedIn()){
+            Button button = (Button) findViewById(R.id.imageView3);
+            button.setVisibility(View.INVISIBLE);
+            mMetadataText.setText("Please touch the sphere to start the music");
+        }
+
         final ImageView coverArtView = (ImageView) findViewById(R.id.imageView2);
 
         if (mMetadata != null && mMetadata.currentTrack != null) {
@@ -347,8 +353,10 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
                     .load(mMetadata.currentTrack.albumCoverWebUrl)
                     .into(coverArtView);
         } else {
-            mMetadataText.setText("Please log in as a Premium User");
-            coverArtView.setBackground(null);
+            if(!isLoggedIn()) {
+                mMetadataText.setText("Please log in as a Premium User");
+                coverArtView.setBackground(null);
+            }
         }
 
     }
@@ -382,6 +390,7 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
 
         Toast.makeText(getApplicationContext(), "Login complete",
                 Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
@@ -390,6 +399,7 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
         updateView();
         Toast.makeText(getApplicationContext(), "Logout complete",
                 Toast.LENGTH_SHORT).show();
+
     }
 
     public void onLoginFailed(Error error) {
@@ -422,8 +432,9 @@ public class AugmentedRealityActivity extends Activity implements View.OnTouchLi
 
     @Override
     protected void onDestroy() {
-        com.spotify.sdk.android.player.Spotify.destroyPlayer(this);
+        //com.spotify.sdk.android.player.Spotify.destroyPlayer(this);
         super.onDestroy();
+        mPlayer.pause(mOperationCallback);
         FirstTimeClicked = true;
     }
 

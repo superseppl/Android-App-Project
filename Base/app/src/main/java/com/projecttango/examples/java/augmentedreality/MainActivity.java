@@ -70,11 +70,6 @@ public class MainActivity extends Activity {
         startActivity(sendSettingsToSetting);
     }
 
-    public void sendSpotify(View view) {
-        Intent intent = new Intent(MainActivity.this, MySpotify.class);
-        startActivity(intent);
-    }
-
     public void sendSpeech(View view) {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, "com.projecttango.examples.java.augmentedreality");
